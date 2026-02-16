@@ -22,10 +22,49 @@ def dashboard(request):
 @login_required
 def menstrual_tracking(request):
     """Menstrual tracking page"""
-    cycles = MenstrualCycle.objects.filter(user=request.user).order_by('-period_start_date')
+    if request.method == 'POST':
+        # Handle cycle creation
+        if 'cycle_start' in request.POST:
+            try:
+                from datetime import datetime, timedelta
+                cycle_start = datetime.strptime(request.POST.get('cycle_start'), '%Y-%m-%d').date()
+                cycle_length = int(request.POST.get('cycle_length', 28))
+                
+                # Create menstrual cycle
+                cycle = MenstrualCycle.objects.create(
+                    user=request.user,
+                    cycle_start=cycle_start,
+                    cycle_length=cycle_length,
+                    period_length=int(request.POST.get('period_length', 5)),
+                    fertile_window_start=cycle_start + timedelta(days=8),
+                    fertile_window_end=cycle_start + timedelta(days=13),
+                    next_period_date=cycle_start + timedelta(days=cycle_length),
+                    notes=request.POST.get('notes', '')
+                )
+                messages.success(request, 'Menstrual cycle added successfully!')
+                return redirect('menstrual_tracking')
+            except Exception as e:
+                messages.error(request, f'Error adding cycle: {str(e)}')
+    
+    # GET request - display existing data
+    try:
+        cycles = MenstrualCycle.objects.filter(user=request.user).order_by('-cycle_start')
+    except:
+        cycles = []
+    
+    # Calculate stats if cycles exist
+    avg_cycle = 28
+    fertile_days = 5
+    if cycles:
+        cycle_lengths = [c.cycle_length for c in cycles]
+        if cycle_lengths:
+            avg_cycle = sum(cycle_lengths) // len(cycle_lengths)
+    
     context = {
         'user': request.user,
         'cycles': cycles,
+        'avg_cycle': avg_cycle,
+        'fertile_days': fertile_days,
         'title': 'Menstrual Tracking - PregaCare'
     }
     return render(request, 'menstrual_tracking.html', context)
@@ -178,6 +217,66 @@ def postpartum_care(request):
 @login_required
 def baby_care(request):
     """Baby care page"""
+    if request.method == 'POST':
+        # Handle vaccination record creation
+        if 'vaccine_name' in request.POST:
+            try:
+                # Get or create baby profile
+                baby_name = request.POST.get('baby_name', 'Baby')
+                baby, created = BabyProfile.objects.get_or_create(
+                    user=request.user,
+                    defaults={
+                        'name': baby_name,
+                        'birth_date': datetime.now().date() - timedelta(days=30),
+                        'birth_weight': 3.2,
+                        'birth_length': 50,
+                        'apgar_score': 9
+                    }
+                )
+                
+                # Create vaccination record
+                VaccinationRecord.objects.create(
+                    baby=baby,
+                    vaccine_name=request.POST.get('vaccine_name'),
+                    scheduled_date=datetime.strptime(request.POST.get('scheduled_date'), '%Y-%m-%d').date(),
+                    administered_date=datetime.strptime(request.POST.get('administered_date'), '%Y-%m-%d').date() if request.POST.get('administered_date') else None,
+                    notes=request.POST.get('notes', '')
+                )
+                messages.success(request, 'Vaccination record added successfully!')
+                return redirect('baby_care')
+            except Exception as e:
+                messages.error(request, f'Error adding vaccination record: {str(e)}')
+        
+        # Handle growth record creation
+        elif 'weight' in request.POST:
+            try:
+                baby_name = request.POST.get('baby_name', 'Baby')
+                baby, created = BabyProfile.objects.get_or_create(
+                    user=request.user,
+                    defaults={
+                        'name': baby_name,
+                        'birth_date': datetime.now().date() - timedelta(days=30),
+                        'birth_weight': 3.2,
+                        'birth_length': 50,
+                        'apgar_score': 9
+                    }
+                )
+                
+                # Create growth record
+                GrowthRecord.objects.create(
+                    baby=baby,
+                    weight=float(request.POST.get('weight')),
+                    height=float(request.POST.get('height', 50)),
+                    head_circumference=float(request.POST.get('head_circumference', 35)),
+                    record_date=datetime.strptime(request.POST.get('record_date'), '%Y-%m-%d').date(),
+                    notes=request.POST.get('notes', '')
+                )
+                messages.success(request, 'Growth record added successfully!')
+                return redirect('baby_care')
+            except Exception as e:
+                messages.error(request, f'Error adding growth record: {str(e)}')
+    
+    # GET request - display existing data
     try:
         postpartum_profile = PostpartumProfile.objects.get(user=request.user)
         baby_profiles = BabyProfile.objects.filter(postpartum_profile=postpartum_profile)
@@ -188,9 +287,32 @@ def baby_care(request):
             vaccination_records.extend(VaccinationRecord.objects.filter(baby=baby))
             growth_records.extend(GrowthRecord.objects.filter(baby=baby))
     except PostpartumProfile.DoesNotExist:
+        # Create sample data for demonstration
         baby_profiles = []
         vaccination_records = []
         growth_records = []
+        
+        # Add sample vaccination records
+        sample_vaccines = [
+            {'vaccine_name': 'BCG', 'baby_name': 'Sample Baby', 'scheduled_date': '2024-01-15', 'administered_date': '2024-01-15'},
+            {'vaccine_name': 'Hepatitis B', 'baby_name': 'Sample Baby', 'scheduled_date': '2024-02-15', 'administered_date': '2024-02-15'},
+            {'vaccine_name': 'DPT', 'baby_name': 'Sample Baby', 'scheduled_date': '2024-03-15', 'administered_date': '2024-03-15'},
+        ]
+        
+        for vaccine_data in sample_vaccines:
+            # Create a simple object-like structure for template
+            vaccine_obj = type('Vaccine', (), vaccine_data)
+            vaccination_records.append(vaccine_obj)
+        
+        # Add sample growth records
+        sample_growth = [
+            {'weight': 3.5, 'height': 52, 'head_circumference': 36, 'baby_name': 'Sample Baby', 'record_date': '2024-01-15'},
+            {'weight': 4.2, 'height': 55, 'head_circumference': 37, 'baby_name': 'Sample Baby', 'record_date': '2024-02-15'},
+        ]
+        
+        for growth_data in sample_growth:
+            growth_obj = type('Growth', (), growth_data)
+            growth_records.append(growth_obj)
     
     context = {
         'user': request.user,
