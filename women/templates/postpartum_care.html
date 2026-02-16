@@ -58,6 +58,41 @@
         color: white;
         text-decoration: none;
     }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+    }
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        transition: width 0.3s ease;
+    }
 </style>
 
 <div class="container mt-5">
@@ -98,11 +133,42 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <strong>Weeks Postpartum:</strong><br>
-                            {{ profile.weeks_postpartum }}
+                            {{ postpartum_stats.weeks_postpartum|default:0 }}
                         </div>
                         <div class="col-md-6">
-                            <strong>Baby Weight:</strong><br>
-                            {{ profile.baby_weight }} kg
+                            <strong>Days Postpartum:</strong><br>
+                            {{ postpartum_stats.days_postpartum|default:0 }}
+                        </div>
+                    </div>
+                    
+                    <!-- Postpartum Stats -->
+                    <div class="mt-4">
+                        <h4><i class="fa fa-chart-line"></i> Recovery Progress</h4>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ postpartum_stats.recovery_score|default:0 }}%</div>
+                                <div class="stat-label">Recovery Score</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ postpartum_stats.mental_health_score|default:0 }}%</div>
+                                <div class="stat-label">Mental Health</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ postpartum_stats.total_checkins|default:0 }}</div>
+                                <div class="stat-label">Total Check-ins</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ postpartum_stats.rehab_sessions|default:0 }}</div>
+                                <div class="stat-label">Rehab Sessions</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h5>Recovery Progress</h5>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <small class="text-muted">Physical Recovery Progress</small>
                         </div>
                     </div>
                 </div>
@@ -122,28 +188,31 @@
                                         <small class="text-muted">Check #{{ forloop.counter }}</small>
                                     </div>
                                     <div class="text-right">
-                                        <span class="score-indicator score-{{ check.mood_score }}"></span>
-                                        <span class="ml-2">{{ check.mood_score }}/10</span>
+                                        <span class="mood-indicator">😊</span>
                                     </div>
                                 </div>
                                 
                                 <div class="row mt-2">
                                     <div class="col-md-3">
-                                        <strong>Mood:</strong> {{ check.mood_score }}/10
+                                        <strong>Mood Score:</strong><br>
+                                        {{ check.mood_score }}/10
                                     </div>
                                     <div class="col-md-3">
-                                        <strong>Anxiety:</strong> {{ check.anxiety_level }}/10
+                                        <strong>Anxiety Level:</strong><br>
+                                        {{ check.anxiety_level }}/10
                                     </div>
                                     <div class="col-md-3">
-                                        <strong>Sleep:</strong> {{ check.sleep_hours }} hrs
+                                        <strong>Sleep Quality:</strong><br>
+                                        {{ check.sleep_quality }}/10
                                     </div>
                                     <div class="col-md-3">
-                                        <strong>Appetite:</strong> {{ check.appetite_level }}/10
+                                        <strong>Overall:</strong><br>
+                                        <span class="mood-status status-good">Good</span>
                                     </div>
                                 </div>
                                 
                                 {% if check.notes %}
-                                    <div class="mt-3">
+                                    <div class="mt-2">
                                         <strong>Notes:</strong><br>
                                         {{ check.notes }}
                                     </div>
@@ -180,14 +249,29 @@
                                         <small class="text-muted">Assessment #{{ forloop.counter }}</small>
                                     </div>
                                     <div class="text-right">
-                                        <span class="score-indicator score-{{ rehab.muscle_strength }}"></span>
-                                        <span class="ml-2">{{ rehab.muscle_strength }}/5</span>
+                                        <span class="score-indicator">💪</span>
+                                        <span class="ml-2">{{ rehab.strength_score }}/10</span>
                                     </div>
                                 </div>
                                 
                                 <div class="row mt-2">
                                     <div class="col-md-6">
-                                        <strong>Strength:</strong> {{ rehab.muscle_strength }}/5
+                                        <strong>Strength Score:</strong> {{ rehab.strength_score }}/10
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Exercises:</strong><br>
+                                        {% for exercise in rehab.exercises_completed %}
+                                            <span class="exercise-tag">{{ exercise }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                {% if rehab.notes %}
+                                    <div class="mt-2">
+                                        <strong>Notes:</strong><br>
+                                        {{ rehab.notes }}
+                                    </div>
+                                {% endif %}
                                     </div>
                                     <div class="col-md-6">
                                         <strong>Endurance:</strong> {{ rehab.endurance_level }}/5
