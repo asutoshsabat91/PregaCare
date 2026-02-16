@@ -2,57 +2,17 @@
 {% load static %}
 {% block body %}
 
-<div class="container mt-5">
-    <h2 class="text-center">PROFILE</h2>
-    <hr><hr><br>
-    <div class="row">
-        <div class="col-md-6">
-            <h5><b>Full Name : </b></h5>
-        </div>
-        <div class="col-md-6" style="text-transform: capitalize;">
-            <h5>{{data.user.first_name}} {{data.user.last_name}}</h5>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-6">
-            <h5><b>Email : </b></h5>
-        </div>
-        <div class="col-md-6">
-            <h5>{{data.user.username}}</h5>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-6">
-            <h5><b>Contact : </b></h5>
-        </div>
-        <div class="col-md-6">
-            <h5>{{data.contact}}</h5>
-        </div>
-    </div>
-    <hr>
-    <!-- <div class="row">
-        <div class="col-md-6">
-            <h5><b>Branch : </b></h5>
-        </div>
-        <div class="col-md-6">
-            <h5>{{data.branch}}</h5>
-        </div>
-    </div>
-    <hr> -->
-    <div class="row">
-        <div class="col-md-6">
-            <h5><b>Role : </b></h5>
-        </div>
-        <div class="col-md-6">
-            <h5>{{data.role}}</h5>
-        </div>
-    </div><br><hr><br>
-    <a class="bb btn btn-primary" href="{% url 'edit_profile' %}">Edit Profile</a>
-    <br><hr>
-    <a class="bb btn btn-primary" href="{% url 'changepassword' %}">Change Password</a>
-</div>
+<script>
+    // Redirect to dashboard after login
+    window.location.href = "{% url 'dashboard' %}";
+</script>
 
+<div class="container mt-5 text-center">
+    <h2>Redirecting to Dashboard...</h2>
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <p class="mt-3">Taking you to your PregaCare Dashboard</p>
+</div>
 
 {% endblock %}

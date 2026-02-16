@@ -1,0 +1,171 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .tracking-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .cycle-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    .cycle-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .add-cycle-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .add-cycle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+    .fertile-window {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="tracking-header">
+        <h1><i class="fa fa-calendar"></i> Menstrual Tracking</h1>
+        <p class="lead mb-0">Track your cycle and monitor your fertility</p>
+    </div>
+
+    <!-- Cycles List -->
+    <div class="row">
+        <div class="col-md-8">
+            <h3 class="mb-4">Your Menstrual Cycles</h3>
+            
+            {% if cycles %}
+                {% for cycle in cycles %}
+                    <div class="cycle-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5>Cycle {{ forloop.counter }}</h5>
+                            <div>
+                                <strong>Start Date:</strong> {{ cycle.period_start_date }}<br>
+                                <strong>End Date:</strong> {{ cycle.period_end_date }}<br>
+                                <strong>Cycle Length:</strong> {{ cycle.cycle_length }} days<br>
+                                <strong>Flow Intensity:</strong> {{ cycle.get_flow_intensity_display }}<br>
+                                {% if cycle.symptoms %}
+                                    <strong>Symptoms:</strong> {{ cycle.symptoms }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if cycle.fertile_window_start and cycle.fertile_window_end %}
+                            <div class="fertile-window">
+                                <i class="fa fa-heart"></i>
+                                <strong>Fertile Window:</strong> {{ cycle.fertile_window_start }} - {{ cycle.fertile_window_end }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="text-right">
+                            <small class="text-muted">Next Period: {{ cycle.next_period_date }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fa fa-calendar-alt fa-3x mb-3" style="color: #ccc;"></i>
+                    <h4>No cycles recorded yet</h4>
+                    <p class="text-muted">Start tracking your menstrual cycle to see your patterns and fertility windows.</p>
+                    <button class="add-cycle-btn" data-toggle="modal" data-target="#addCycleModal">
+                        <i class="fa fa-plus"></i> Add Your First Cycle
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-4">
+            <h3 class="mb-4">Quick Stats</h3>
+            <div class="cycle-card">
+                <div class="text-center">
+                    <h5><i class="fa fa-chart-line"></i> Average Cycle</h5>
+                    <p class="display-4">28 days</p>
+                </div>
+            </div>
+            <div class="cycle-card">
+                <div class="text-center">
+                    <h5><i class="fa fa-heart"></i> Fertile Days</h5>
+                    <p class="display-4">5 days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Cycle Modal -->
+<div class="modal fade" id="addCycleModal" tabindex="-1" role="dialog" aria-labelledby="addCycleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCycleModalLabel">Add New Cycle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="period_start_date">Period Start Date</label>
+                        <input type="date" class="form-control" name="period_start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="period_end_date">Period End Date</label>
+                        <input type="date" class="form-control" name="period_end_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cycle_length">Cycle Length (days)</label>
+                        <input type="number" class="form-control" name="cycle_length" value="28" min="20" max="45">
+                    </div>
+                    <div class="form-group">
+                        <label for="flow_intensity">Flow Intensity</label>
+                        <select class="form-control" name="flow_intensity" required>
+                            <option value="light">Light</option>
+                            <option value="medium">Medium</option>
+                            <option value="heavy">Heavy</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="symptoms">Symptoms (optional)</label>
+                        <textarea class="form-control" name="symptoms" rows="3" placeholder="Note any symptoms like cramps, headaches, etc."></textarea>
+                    </div>
+                    <button type="submit" class="add-cycle-btn">
+                        <i class="fa fa-save"></i> Save Cycle
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

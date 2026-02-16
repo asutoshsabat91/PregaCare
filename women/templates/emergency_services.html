@@ -1,0 +1,285 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .emergency-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .emergency-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .emergency-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .sos-button {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        color: white;
+        padding: 20px 40px;
+        border-radius: 50px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .sos-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        animation: none;
+    }
+    .contact-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid #dc3545;
+    }
+    .contact-item h5 {
+        color: #dc3545;
+        margin-bottom: 5px;
+    }
+    .mews-indicator {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    .mews-score {
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 10px 0;
+    }
+    .score-low { color: #28a745; }
+    .score-medium { color: #ffc107; }
+    .score-high { color: #dc3545; }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="emergency-header">
+        <h1><i class="fa fa-ambulance"></i> Emergency Services</h1>
+        <p class="lead mb-0">24/7 Emergency Support & Critical Care</p>
+    </div>
+
+    <!-- SOS Button -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="emergency-card text-center">
+                <h3><i class="fa fa-exclamation-triangle"></i> Emergency SOS</h3>
+                <p class="text-muted">Press for immediate emergency assistance</p>
+                <button class="sos-button" onclick="activateSOS()">
+                    <i class="fa fa-phone"></i> ACTIVATE SOS
+                </button>
+                <div id="sos-status" style="display: none;" class="alert alert-danger">
+                    <i class="fa fa-spinner fa-spin"></i> Emergency services are being contacted...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Emergency Contacts -->
+        <div class="col-md-6">
+            <div class="emergency-card">
+                <h3><i class="fa fa-phone-alt"></i> Emergency Contacts</h3>
+                
+                <div class="contact-item">
+                    <h5><i class="fa fa-hospital"></i> Ambulance</h5>
+                    <p><strong>108</strong> - Emergency Medical Services</p>
+                    <button class="btn btn-danger btn-sm" onclick="callEmergency('108')">
+                        <i class="fa fa-phone"></i> Call Now
+                    </button>
+                </div>
+                
+                <div class="contact-item">
+                    <h5><i class="fa fa-shield-alt"></i> Police</h5>
+                    <p><strong>100</strong> - Emergency Police Services</p>
+                    <button class="btn btn-danger btn-sm" onclick="callEmergency('100')">
+                        <i class="fa fa-phone"></i> Call Now
+                    </button>
+                </div>
+                
+                <div class="contact-item">
+                    <h5><i class="fa fa-fire"></i> Fire Department</h5>
+                    <p><strong>101</strong> - Fire Emergency Services</p>
+                    <button class="btn btn-danger btn-sm" onclick="callEmergency('101')">
+                        <i class="fa fa-phone"></i> Call Now
+                    </button>
+                </div>
+                
+                <div class="contact-item">
+                    <h5><i class="fa fa-user-md"></i> Women's Helpline</h5>
+                    <p><strong>1091</strong> - Women's Emergency Helpline</p>
+                    <button class="btn btn-danger btn-sm" onclick="callEmergency('1091')">
+                        <i class="fa fa-phone"></i> Call Now
+                    </button>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="action-btn" onclick="addEmergencyContact()">
+                        <i class="fa fa-plus"></i> Add Custom Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MEWS Monitoring -->
+        <div class="col-md-6">
+            <div class="emergency-card">
+                <h3><i class="fa fa-heartbeat"></i> MEWS Monitoring</h3>
+                
+                <div class="mews-indicator">
+                    <h5>Modified Early Warning Score</h5>
+                    <div class="mews-score score-medium" id="mews-score">5</div>
+                    <p class="text-center mb-0">Medium Risk - Monitor Closely</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Heart Rate:</strong> 95 bpm
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Blood Pressure:</strong> 120/80
+                    </div>
+                </div>
+                
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <strong>Temperature:</strong> 37.5°C
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Respiratory Rate:</strong> 18/min
+                    </div>
+                </div>
+                
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <strong>Oxygen Saturation:</strong> 96%
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Consciousness:</strong> Alert
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="action-btn" onclick="updateMEWS()">
+                        <i class="fa fa-sync"></i> Update MEWS Score
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Emergency Guidelines -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="emergency-card">
+                <h3><i class="fa fa-info-circle"></i> Emergency Guidelines</h3>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-baby fa-3x mb-3" style="color: #dc3545;"></i>
+                            <h5>Pregnancy Emergency</h5>
+                            <p>Severe bleeding, contractions before 37 weeks, decreased fetal movement</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-heart fa-3x mb-3" style="color: #dc3545;"></i>
+                            <h5>Postpartum Emergency</h5>
+                            <p>Heavy bleeding, fever, severe headache, chest pain, difficulty breathing</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-child fa-3x mb-3" style="color: #dc3545;"></i>
+                            <h5>Neonatal Emergency</h5>
+                            <p>Fever, difficulty breathing, poor feeding, lethargy, jaundice</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function activateSOS() {
+    const statusDiv = document.getElementById('sos-status');
+    statusDiv.style.display = 'block';
+    
+    // Simulate emergency contact
+    setTimeout(() => {
+        statusDiv.innerHTML = '<i class="fa fa-check"></i> Emergency services contacted. Help is on the way!';
+        statusDiv.className = 'alert alert-success';
+        
+        // In a real app, this would trigger actual emergency protocols
+        alert('SOS ACTIVATED: Emergency services have been notified. Your location has been shared with emergency responders.');
+    }, 2000);
+}
+
+function callEmergency(number) {
+    if (confirm(`Are you sure you want to call emergency number ${number}?`)) {
+        // In a real app, this would initiate an actual phone call
+        alert(`Calling emergency number ${number}...`);
+        window.location.href = `tel:${number}`;
+    }
+}
+
+function addEmergencyContact() {
+    const name = prompt('Enter contact name:');
+    if (name) {
+        const number = prompt('Enter contact number:');
+        if (number) {
+            alert(`Emergency contact ${name} (${number}) has been added to your emergency contacts.`);
+        }
+    }
+}
+
+function updateMEWS() {
+    alert('MEWS score updated successfully. Continue monitoring vital signs.');
+}
+</script>
+
+{% endblock %}

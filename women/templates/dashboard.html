@@ -1,0 +1,379 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .feature-section {
+        margin-bottom: 40px;
+    }
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 28px;
+        color: white;
+    }
+    .icon-health { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .icon-baby { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .icon-telehealth { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .icon-ai { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .icon-emergency { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+    .icon-tools { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    
+    .quick-stats {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="container text-center">
+            <h1><i class="fa fa-heartbeat"></i> Welcome to PregaCare Dashboard</h1>
+            <p class="lead mb-0">Your comprehensive maternal health companion</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-number">28</div>
+                    <div class="stat-label">Weeks Pregnant</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Upcoming Appointments</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Health Insights</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Medications Active</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Tracking Section -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-heartbeat"></i> Health Tracking</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-health">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <h4>Menstrual Tracking</h4>
+                    <p>Track your menstrual cycle, predict fertile windows, and monitor symptoms for better health planning.</p>
+                    <a href="{% url 'menstrual_tracking' %}" class="action-btn">Start Tracking</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-health">
+                        <i class="fa fa-baby"></i>
+                    </div>
+                    <h4>Pregnancy Profile</h4>
+                    <p>Week-by-week pregnancy monitoring with personalized health insights and milestone tracking.</p>
+                    <a href="{% url 'pregnancy_profile' %}" class="action-btn">View Profile</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-health">
+                        <i class="fa fa-apple"></i>
+                    </div>
+                    <h4>Nutrition Engine</h4>
+                    <p>Personalized nutrition plans based on your pregnancy week and dietary requirements.</p>
+                    <a href="{% url 'nutrition_engine' %}" class="action-btn">Get Nutrition Plan</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-health">
+                        <i class="fa fa-heart"></i>
+                    </div>
+                    <h4>Postpartum Care</h4>
+                    <p>Comprehensive postpartum recovery tracking with mental health monitoring.</p>
+                    <a href="{% url 'postpartum_care' %}" class="action-btn">Start Recovery</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-health">
+                        <i class="fa fa-female"></i>
+                    </div>
+                    <h4>Pelvic Floor Rehab</h4>
+                    <p>Progressive pelvic floor exercises with strength and endurance tracking.</p>
+                    <a href="{% url 'pelvic_floor_rehab' %}" class="action-btn">Begin Exercises</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-tools">
+                        <i class="fa fa-calculator"></i>
+                    </div>
+                    <h4>BMI Calculator</h4>
+                    <p>Track your body mass index and maintain healthy weight during pregnancy.</p>
+                    <a href="{% url 'bmi' %}" class="action-btn">Calculate BMI</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Baby Care Section -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-child"></i> Baby Care</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-baby">
+                        <i class="fa fa-syringe"></i>
+                    </div>
+                    <h4>Vaccination Tracker</h4>
+                    <p>Complete vaccination schedule management with automatic reminders and tracking.</p>
+                    <a href="{% url 'baby_care' %}" class="action-btn">Track Vaccines</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-baby">
+                        <i class="fa fa-line-chart"></i>
+                    </div>
+                    <h4>Growth Records</h4>
+                    <p>Monitor your baby's growth with weight, length, and head circumference tracking.</p>
+                    <a href="#" class="action-btn">View Growth</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-baby">
+                        <i class="fa fa-trophy"></i>
+                    </div>
+                    <h4>Developmental Milestones</h4>
+                    <p>Track important developmental milestones and celebrate your baby's progress.</p>
+                    <a href="#" class="action-btn">Track Milestones</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telehealth Section -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-video"></i> Telehealth Services</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-telehealth">
+                        <i class="fa fa-user-md"></i>
+                    </div>
+                    <h4>Find Healthcare Providers</h4>
+                    <p>Connect with verified OB-GYNs, midwives, nutritionists, and mental health professionals.</p>
+                    <a href="{% url 'telehealth' %}" class="action-btn">Find Providers</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-telehealth">
+                        <i class="fa fa-calendar-check"></i>
+                    </div>
+                    <h4>My Appointments</h4>
+                    <p>Schedule and manage video, phone, or in-person consultations with healthcare providers.</p>
+                    <a href="{% url 'telehealth' %}" class="action-btn">View Appointments</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-telehealth">
+                        <i class="fa fa-notes-medical"></i>
+                    </div>
+                    <h4>Medical Records</h4>
+                    <p>Secure digital storage of consultations, diagnoses, treatment plans, and prescriptions.</p>
+                    <a href="{% url 'telehealth' %}" class="action-btn">View Records</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Section -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-robot"></i> AI Health Assistant</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-ai">
+                        <i class="fa fa-comments"></i>
+                    </div>
+                    <h4>24/7 AI Chat</h4>
+                    <p>Get instant health advice and answers to your pregnancy questions anytime, anywhere.</p>
+                    <a href="{% url 'ai_assistant' %}" class="action-btn">Start Chatting</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-ai">
+                        <i class="fa fa-stethoscope"></i>
+                    </div>
+                    <h4>Symptom Checker</h4>
+                    <p>AI-powered symptom assessment with urgency recommendations and next steps.</p>
+                    <a href="{% url 'ai_assistant' %}" class="action-btn">Check Symptoms</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-ai">
+                        <i class="fa fa-lightbulb"></i>
+                    </div>
+                    <h4>Health Insights</h4>
+                    <p>Personalized health recommendations based on your patterns and health data.</p>
+                    <a href="{% url 'ai_assistant' %}" class="action-btn">View Insights</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Section -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-exclamation-triangle"></i> Emergency Services</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-emergency">
+                        <i class="fa fa-heartbeat"></i>
+                    </div>
+                    <h4>MEWS Assessment</h4>
+                    <p>Maternal Early Warning System for vital signs monitoring and risk assessment.</p>
+                    <a href="{% url 'emergency_services' %}" class="action-btn">Assess Now</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-emergency">
+                        <i class="fa fa-phone-alt"></i>
+                    </div>
+                    <h4>SOS Alert</h4>
+                    <p>Emergency alert system with location tracking and immediate notification to contacts.</p>
+                    <a href="{% url 'emergency_services' %}" class="action-btn">Activate SOS</a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-emergency">
+                        <i class="fa fa-user-friends"></i>
+                    </div>
+                    <h4>Emergency Contacts</h4>
+                    <p>Manage emergency contacts and ensure quick access to help when needed.</p>
+                    <a href="{% url 'emergency_services' %}" class="action-btn">Manage Contacts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resources Section -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-book"></i> Educational Resources</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-tools">
+                        <i class="fa fa-book-open"></i>
+                    </div>
+                    <h4>Health Magazine</h4>
+                    <p>Access curated articles and resources about pregnancy, nutrition, and baby care.</p>
+                    <a href="{% url 'educational_resources' %}" class="action-btn">Read Articles</a>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon icon-tools">
+                        <i class="fa fa-hands-helping"></i>
+                    </div>
+                    <h4>NGO Support</h4>
+                    <p>Connect with support organizations and communities for additional help.</p>
+                    <a href="{% url 'ngos' %}" class="action-btn">Get Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

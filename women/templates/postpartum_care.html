@@ -1,0 +1,289 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .postpartum-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .care-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .care-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .score-indicator {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 0 auto 15px;
+    }
+    .score-1 { background: #28a745; color: white; }
+    .score-2 { background: #ffc107; color: white; }
+    .score-3 { background: #fd7e14; color: white; }
+    .score-4 { background: #dc3545; color: white; }
+    .score-5 { background: #dc3545; color: white; }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Header -->
+    <div class="postpartum-header">
+        <h1><i class="fa fa-heart"></i> Postpartum Care</h1>
+        <p class="lead mb-0">Your recovery and mental health journey</p>
+    </div>
+
+    {% if profile %}
+        <div class="row">
+            <!-- Profile Info -->
+            <div class="col-md-4">
+                <div class="care-card text-center">
+                    <h3><i class="fa fa-user"></i> Recovery Profile</h3>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Delivery Date:</strong><br>
+                            {{ profile.delivery_date }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Delivery Type:</strong><br>
+                            {{ profile.get_delivery_type_display }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Weeks Postpartum:</strong><br>
+                            {{ profile.weeks_postpartum }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Baby Weight:</strong><br>
+                            {{ profile.baby_weight }} kg
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mental Health Checks -->
+            <div class="col-md-8">
+                <div class="care-card">
+                    <h3><i class="fa fa-brain"></i> Mental Health Monitoring</h3>
+                    
+                    {% if mental_health_checks %}
+                        {% for check in mental_health_checks %}
+                            <div class="mb-3 p-3" style="background: #f8f9fa; border-radius: 10px;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ check.check_date }}</strong><br>
+                                        <small class="text-muted">Check #{{ forloop.counter }}</small>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="score-indicator score-{{ check.mood_score }}"></span>
+                                        <span class="ml-2">{{ check.mood_score }}/10</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-2">
+                                    <div class="col-md-3">
+                                        <strong>Mood:</strong> {{ check.mood_score }}/10
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Anxiety:</strong> {{ check.anxiety_level }}/10
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Sleep:</strong> {{ check.sleep_hours }} hrs
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Appetite:</strong> {{ check.appetite_level }}/10
+                                    </div>
+                                </div>
+                                
+                                {% if check.notes %}
+                                    <div class="mt-3">
+                                        <strong>Notes:</strong><br>
+                                        {{ check.notes }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa fa-brain fa-3x mb-3" style="color: #ccc;"></i>
+                            <h5>No Mental Health Checks</h5>
+                            <p class="text-muted">Your mental health check-ins will appear here.</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="text-center mt-4">
+                        <a href="#" class="action-btn">
+                            <i class="fa fa-plus"></i> Add Mental Health Check
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pelvic Floor Rehab -->
+            <div class="col-md-12">
+                <div class="care-card">
+                    <h3><i class="fa fa-female"></i> Pelvic Floor Rehabilitation</h3>
+                    
+                    {% if pelvic_floor_rehab %}
+                        {% for rehab in pelvic_floor_rehab %}
+                            <div class="mb-3 p-3" style="background: #e8f5e8; border-radius: 10px;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ rehab.assessment_date }}</strong><br>
+                                        <small class="text-muted">Assessment #{{ forloop.counter }}</small>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="score-indicator score-{{ rehab.muscle_strength }}"></span>
+                                        <span class="ml-2">{{ rehab.muscle_strength }}/5</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <strong>Strength:</strong> {{ rehab.muscle_strength }}/5
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Endurance:</strong> {{ rehab.endurance_level }}/5
+                                    </div>
+                                </div>
+                                
+                                {% if rehab.exercises_prescribed %}
+                                    <div class="mt-3">
+                                        <strong>Prescribed Exercises:</strong><br>
+                                        {{ rehab.exercises_prescribed|linebreaks }}
+                                    </div>
+                                {% endif %}
+                                
+                                {% if rehab.progress_notes %}
+                                    <div class="mt-3">
+                                        <strong>Progress Notes:</strong><br>
+                                        {{ rehab.progress_notes }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa fa-female fa-3x mb-3" style="color: #ccc;"></i>
+                            <h5>No Pelvic Floor Rehab Records</h5>
+                            <p class="text-muted">Your pelvic floor rehabilitation progress will appear here.</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="text-center mt-4">
+                        <a href="#" class="action-btn">
+                            <i class="fa fa-plus"></i> Schedule Assessment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fa fa-heart fa-3x mb-3" style="color: #ccc;"></i>
+            <h4>No Postpartum Profile Yet</h4>
+            <p class="text-muted">Create a postpartum profile to track your recovery journey.</p>
+            <a href="#" class="action-btn" data-toggle="modal" data-target="#createPostpartumModal">
+                <i class="fa fa-user"></i> Create Postpartum Profile
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Create Postpartum Profile Modal -->
+<div class="modal fade" id="createPostpartumModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Postpartum Profile</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="postpartumProfileForm">
+                    <div class="form-group">
+                        <label>Delivery Date</label>
+                        <input type="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Baby Birth Weight (kg)</label>
+                        <input type="number" step="0.1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Type</label>
+                        <select class="form-control" required>
+                            <option value="">Select...</option>
+                            <option value="normal">Normal Delivery</option>
+                            <option value="c-section">C-Section</option>
+                            <option value="assisted">Assisted Delivery</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Recovery Notes</label>
+                        <textarea class="form-control" rows="3" placeholder="Any additional recovery information..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createPostpartumProfile()">Create Profile</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function createPostpartumProfile() {
+    alert('Postpartum profile created successfully! You can now track your recovery journey.');
+    $('#createPostpartumModal').modal('hide');
+    document.getElementById('postpartumProfileForm').reset();
+}
+</script>
+
+{% endblock %}

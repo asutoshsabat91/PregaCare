@@ -1,0 +1,190 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .ngo-header {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .ngo-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border-left: 4px solid #43e97b;
+    }
+    .ngo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .ngo-logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 24px;
+        color: white;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    .support-category {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 4px solid #43e97b;
+    }
+</style>
+
+<!-- Header Section -->
+<div class="container">
+    <div class="ngo-header text-center">
+        <h1><i class="fa fa-hands-helping"></i> NGO Support & Community Resources</h1>
+        <p class="lead mb-0">Connect with support organizations and communities for additional help and resources</p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Featured NGOs -->
+    <div class="feature-section">
+        <h2 class="text-center mb-4"><i class="fa fa-hands-helping"></i> Featured Partner Organizations</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="ngo-card text-center">
+                    <div class="ngo-logo">
+                        <i class="fa fa-heart"></i>
+                    </div>
+                    <h5>Women's Health Foundation</h5>
+                    <p class="text-muted">Comprehensive maternal health support and education programs</p>
+                    <div class="mt-3">
+                        <span class="badge badge-success">Verified Partner</span>
+                        <span class="badge badge-info">24/7 Support</span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="action-btn" onclick="connectWithNGO('Women\'s Health Foundation')">
+                            <i class="fa fa-phone"></i> Contact Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="ngo-card text-center">
+                    <div class="ngo-logo">
+                        <i class="fa fa-baby"></i>
+                    </div>
+                    <h5>Mother & Child Care Network</h5>
+                    <p class="text-muted">Dedicated support for mothers and children in need</p>
+                    <div class="mt-3">
+                        <span class="badge badge-success">Verified Partner</span>
+                        <span class="badge badge-warning">Free Services</span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="action-btn" onclick="connectWithNGO('Mother & Child Care Network')">
+                            <i class="fa fa-phone"></i> Contact Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="ngo-card text-center">
+                    <div class="ngo-logo">
+                        <i class="fa fa-users"></i>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="downloadResource('postpartum-guide')">
+                        <h6><i class="fa fa-file-pdf"></i> Postpartum Recovery</h6>
+                        <small>Guide to postpartum care and recovery</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How to Get Help -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="ngo-card">
+                <h3><i class="fa fa-question-circle"></i> How to Get Help</h3>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-phone fa-2x mb-3" style="color: #43e97b;"></i>
+                            <h5>Step 1: Call</h5>
+                            <p>Contact the NGO directly using the provided numbers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-file-medical fa-2x mb-3" style="color: #43e97b;"></i>
+                            <h5>Step 2: Register</h5>
+                            <p>Complete the registration process with required documents</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-calendar-check fa-2x mb-3" style="color: #43e97b;"></i>
+                            <h5>Step 3: Schedule</h5>
+                            <p>Book appointments for consultations and services</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <i class="fa fa-hands-helping fa-2x mb-3" style="color: #43e97b;"></i>
+                            <h5>Step 4: Receive</h5>
+                            <p>Get the support and services you need</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function contactNGO(ngoName) {
+    if (confirm(`Contact ${ngoName} for support?`)) {
+        alert(`Connecting you with ${ngoName}. In a real app, this would initiate contact through phone, email, or messaging.`);
+    }
+}
+
+function findMoreNGOs() {
+    const location = prompt('Enter your location to find nearby NGOs:');
+    if (location) {
+        alert(`Searching for NGOs in ${location}... Results will be displayed shortly.`);
+    }
+}
+
+function downloadResource(resourceName) {
+    alert(`Downloading ${resourceName}.pdf... In a real app, this would download the actual resource file.`);
+}
+</script>
+
+{% endblock %}

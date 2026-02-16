@@ -1,0 +1,208 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .baby-header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .baby-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .baby-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .vaccination-status {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .status-upcoming {
+        background: linear-gradient(135deg, #ffc107 0%, #ff6b6b 100%);
+        color: #856404;
+    }
+    .status-overdue {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+    .status-completed {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    .growth-chart {
+        height: 200px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin: 10px 0;
+        position: relative;
+    }
+    .growth-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 0 0 10px 10px;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Header -->
+    <div class="baby-header">
+        <h1><i class="fa fa-child"></i> Baby Care</h1>
+        <p class="lead mb-0">Track your baby's growth and vaccination schedule</p>
+    </div>
+
+    {% if baby_profiles %}
+        <div class="row">
+            <!-- Baby Profiles -->
+            <div class="col-md-6">
+                <div class="baby-card">
+                    <h3><i class="fa fa-baby"></i> Baby Profiles</h3>
+                    
+                    {% for baby in baby_profiles %}
+                        <div class="mb-3 p-3" style="background: #e8f5e8; border-radius: 10px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>{{ baby.name }}</h5>
+                                    <small class="text-muted">Born {{ baby.birth_date }}</small>
+                                </div>
+                                    <div>
+                                        <strong>Age:</strong> {{ baby.age_in_months }} months
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <strong>Birth Weight:</strong><br>
+                                    {{ baby.birth_weight }} kg
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Birth Length:</strong><br>
+                                    {{ baby.birth_length }} cm
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>APGAR Score:</strong><br>
+                                    {{ baby.apgar_score }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Vaccination Records -->
+            <div class="col-md-6">
+                <div class="baby-card">
+                    <h3><i class="fa fa-syringe"></i> Vaccination Records</h3>
+                    
+                    {% if vaccination_records %}
+                        {% for vaccine in vaccination_records %}
+                            <div class="mb-3 p-3" style="background: #f8f9fa; border-radius: 10px;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6>{{ vaccine.vaccine_name }}</h6>
+                                        <small class="text-muted">{{ vaccine.baby.name }}</small>
+                                    </div>
+                                    <div class="text-right">
+                                        {% if vaccine.administered_date %}
+                                            <span class="vaccination-status status-completed">✓ Completed</span>
+                                        {% elif vaccine.is_overdue %}
+                                            <span class="vaccination-status status-overdue">⚠ Overdue</span>
+                                        {% else %}
+                                            <span class="vaccination-status status-upcoming">📅 Upcoming</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <strong>Due Date:</strong><br>
+                                        {{ vaccine.due_date }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Administered:</strong><br>
+                                        {{ vaccine.administered_date|default:"Not administered" }}
+                                    </div>
+                                </div>
+                                
+                                {% if vaccine.administered_by %}
+                                    <div class="mt-2">
+                                        <strong>Administered By:</strong> {{ vaccine.administered_by }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa fa-syringe fa-3x mb-3" style="color: #ccc;"></i>
+                            <h5>No Vaccination Records</h5>
+                            <p class="text-muted">Vaccination records will appear here once you create a baby profile.</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="text-center mt-4">
+                        <a href="#" class="action-btn">
+                            <i class="fa fa-plus"></i> Add Vaccination Record
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fa fa-child fa-3x mb-3" style="color: #ccc;"></i>
+            <h4>No Baby Profiles Yet</h4>
+            <p class="text-muted">Create a postpartum profile and add your baby to start tracking their growth and vaccinations.</p>
+            <a href="{% url 'postpartum_care' %}" class="action-btn">
+                <i class="fa fa-user"></i> Create Postpartum Profile
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

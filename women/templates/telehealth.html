@@ -1,0 +1,287 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .telehealth-header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .telehealth-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .telehealth-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .consultation-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-left: 4px solid #4facfe;
+    }
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    .status-scheduled {
+        background: linear-gradient(135deg, #ffc107 0%, #ff6b6b 100%);
+        color: #856404;
+    }
+    .status-completed {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    .status-cancelled {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+    .doctor-card {
+        text-align: center;
+        padding: 20px;
+        background: #e8f5e8;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    .doctor-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="telehealth-header">
+        <h1><i class="fa fa-video"></i> Telehealth Services</h1>
+        <p class="lead mb-0">Connect with healthcare professionals remotely</p>
+    </div>
+
+    <div class="row">
+        <!-- Upcoming Consultations -->
+        <div class="col-md-6">
+            <div class="telehealth-card">
+                <h3><i class="fa fa-calendar-check"></i> Your Consultations</h3>
+                
+                {% if consultations %}
+                    {% for consultation in consultations %}
+                        <div class="consultation-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>{{ consultation.doctor_name }}</h5>
+                                    <small class="text-muted">{{ consultation.specialization }}</small>
+                                </div>
+                                <div class="text-right">
+                                    <span class="status-badge status-{{ consultation.status }}">{{ consultation.get_status_display }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <strong>Date:</strong> {{ consultation.consultation_date }}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Time:</strong> {{ consultation.consultation_time }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <strong>Type:</strong> {{ consultation.get_consultation_type_display }}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Duration:</strong> {{ consultation.duration_minutes }} mins
+                                </div>
+                            </div>
+                            
+                            {% if consultation.status == 'scheduled' %}
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-success btn-sm" onclick="joinConsultation()">
+                                        <i class="fa fa-video"></i> Join Consultation
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fa fa-video fa-3x mb-3" style="color: #ccc;"></i>
+                        <h5>No Consultations Scheduled</h5>
+                        <p class="text-muted">Book your first telehealth consultation to get started.</p>
+                    </div>
+                {% endif %}
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="action-btn" onclick="bookConsultation()">
+                        <i class="fa fa-plus"></i> Book New Consultation
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Available Doctors -->
+        <div class="col-md-6">
+            <div class="telehealth-card">
+                <h3><i class="fa fa-user-md"></i> Available Doctors</h3>
+                
+                <div class="doctor-card">
+                    <div class="doctor-avatar">
+                        <i class="fa fa-user-md"></i>
+                    </div>
+                    <h5>Dr. Sarah Johnson</h5>
+                    <p class="text-muted">Obstetrician & Gynecologist</p>
+                    <p><strong>Experience:</strong> 15 years</p>
+                    <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐ (4.9)</p>
+                    <button class="btn btn-primary btn-sm" onclick="bookWithDoctor('Dr. Sarah Johnson')">">
+                        Book Appointment
+                    </button>
+                </div>
+                
+                <div class="doctor-card">
+                    <div class="doctor-avatar">
+                        <i class="fa fa-user-md"></i>
+                    </div>
+                    <h5>Dr. Emily Chen</h5>
+                    <p class="text-muted">Maternal-Fetal Medicine Specialist</p>
+                    <p><strong>Experience:</strong> 12 years</p>
+                    <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐ (4.8)</p>
+                    <button class="btn btn-primary btn-sm" onclick="bookWithDoctor('Dr. Emily Chen')">
+                        Book Appointment
+                    </button>
+                </div>
+                
+                <div class="doctor-card">
+                    <div class="doctor-avatar">
+                        <i class="fa fa-user-md"></i>
+                    </div>
+                    <h5>Dr. Maria Rodriguez</h5>
+                    <p class="text-muted">Lactation Consultant</p>
+                    <p><strong>Experience:</strong> 10 years</p>
+                    <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐ (4.7)</p>
+                    <button class="btn btn-primary btn-sm" onclick="bookWithDoctor('Dr. Maria Rodriguez')">
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Consultation History -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="telehealth-card">
+                <h3><i class="fa fa-history"></i> Consultation History</h3>
+                
+                {% if consultation_history %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Doctor</th>
+                                    <th>Specialization</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for consult in consultation_history %}
+                                    <tr>
+                                        <td>{{ consult.consultation_date }}</td>
+                                        <td>{{ consult.doctor_name }}</td>
+                                        <td>{{ consult.specialization }}</td>
+                                        <td>{{ consult.get_consultation_type_display }}</td>
+                                        <td>
+                                            <span class="status-badge status-{{ consult.status }}">
+                                                {{ consult.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ consult.notes|default:"No notes" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fa fa-history fa-3x mb-3" style="color: #ccc;"></i>
+                        <h5>No Consultation History</h5>
+                        <p class="text-muted">Your completed consultations will appear here.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function bookConsultation() {
+    const doctor = prompt('Enter doctor name:');
+    if (doctor) {
+        const date = prompt('Enter consultation date (YYYY-MM-DD):');
+        if (date) {
+            const time = prompt('Enter consultation time (HH:MM):');
+            if (time) {
+                alert(`Consultation booked with ${doctor} on ${date} at ${time}. You will receive a confirmation shortly.`);
+            }
+        }
+    }
+}
+
+function bookWithDoctor(doctorName) {
+    const date = prompt(`Enter consultation date with ${doctorName} (YYYY-MM-DD):`);
+    if (date) {
+        const time = prompt('Enter consultation time (HH:MM):');
+        if (time) {
+            alert(`Consultation booked with ${doctorName} on ${date} at ${time}. You will receive a confirmation shortly.`);
+        }
+    }
+}
+
+function joinConsultation(consultationId) {
+    if (confirm('Join the video consultation now?')) {
+        alert('Connecting to video consultation... In a real app, this would open a video call interface.');
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .rehab-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .rehab-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .rehab-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .exercise-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-left: 4px solid #f093fb;
+    }
+    .progress-indicator {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    .score-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 auto 15px;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="rehab-header">
+        <h1><i class="fa fa-female"></i> Pelvic Floor Rehabilitation</h1>
+        <p class="lead mb-0">Strengthen your pelvic floor for better postpartum recovery</p>
+    </div>
+
+    <div class="row">
+        <!-- Current Assessment -->
+        <div class="col-md-4">
+            <div class="rehab-card text-center">
+                <h3><i class="fa fa-chart-line"></i> Current Assessment</h3>
+                
+                <div class="score-circle">3/5</div>
+                <span class="progress-indicator">Moderate Strength</span>
+                
+                <div class="mt-4">
+                    <h5>Assessment Details</h5>
+                    <div class="text-left">
+                        <p><strong>Muscle Strength:</strong> 3/5</p>
+                        <p><strong>Endurance:</strong> 4/5</p>
+                        <p><strong>Coordination:</strong> 3/5</p>
+                        <p><strong>Last Assessment:</strong> 2 days ago</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="action-btn" onclick="scheduleAssessment()">
+                        <i class="fa fa-calendar"></i> Schedule Assessment
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recommended Exercises -->
+        <div class="col-md-8">
+            <div class="rehab-card">
+                <h3><i class="fa fa-dumbbell"></i> Recommended Exercises</h3>
+                
+                <div class="exercise-item">
+                    <h5><i class="fa fa-circle"></i> Kegel Exercises</h5>
+                    <p><strong>Sets:</strong> 3 sets per day<br>
+                    <strong>Repetitions:</strong> 10-15 contractions per set<br>
+                    <strong>Duration:</strong> Hold for 3-5 seconds, relax for 3-5 seconds</p>
+                    <button class="btn btn-primary btn-sm" onclick="startExercise('Kegel')">
+                        <i class="fa fa-play"></i> Start Exercise
+                    </button>
+                </div>
+                
+                <div class="exercise-item">
+                    <h5><i class="fa fa-circle"></i> Bridge Exercises</h5>
+                    <p><strong>Sets:</strong> 2-3 sets per day<br>
+                    <strong>Repetitions:</strong> 10-15 bridges per set<br>
+                    <strong>Duration:</strong> Hold bridge for 10-15 seconds</p>
+                    <button class="btn btn-primary btn-sm" onclick="startExercise('Bridge')">
+                        <i class="fa fa-play"></i> Start Exercise
+                    </button>
+                </div>
+                
+                <div class="exercise-item">
+                    <h5><i class="fa fa-circle"></i> Squat Exercises</h5>
+                    <p><strong>Sets:</strong> 2-3 sets per day<br>
+                    <strong>Repetitions:</strong> 10-12 squats per set<br>
+                    <strong>Form:</strong> Keep back straight, knees behind toes</p>
+                    <button class="btn btn-primary btn-sm" onclick="startExercise('Squat')">
+                        <i class="fa fa-play"></i> Start Exercise
+                    </button>
+                </div>
+                
+                <div class="exercise-item">
+                    <h5><i class="fa fa-circle"></i> Pelvic Tilts</h5>
+                    <p><strong>Sets:</strong> 2-3 sets per day<br>
+                    <strong>Repetitions:</strong> 10-15 tilts per set<br>
+                    <strong>Position:</strong> Lie on back with knees bent</p>
+                    <button class="btn btn-primary btn-sm" onclick="startExercise('Pelvic Tilt')">
+                        <i class="fa fa-play"></i> Start Exercise
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Progress Tracking -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="rehab-card">
+                <h3><i class="fa fa-chart-bar"></i> Progress Tracking</h3>
+                
+                <div class="mb-3">
+                    <h5>Weekly Progress</h5>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-success" style="width: 65%">65% Complete</div>
+                    </div>
+                    <small class="text-muted">13 of 20 exercises completed this week</small>
+                </div>
+                
+                <div class="mb-3">
+                    <h5>Strength Improvement</h5>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-info" style="width: 40%">40% Improved</div>
+                    </div>
+                    <small class="text-muted">From 2/5 to 3/5 muscle strength</small>
+                </div>
+                
+                <div class="mb-3">
+                    <h5>Consistency Score</h5>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-warning" style="width: 80%">80% Consistent</div>
+                    </div>
+                    <small class="text-muted">Exercised 4 out of 5 days this week</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Educational Resources -->
+        <div class="col-md-6">
+            <div class="rehab-card">
+                <h3><i class="fa fa-book"></i> Educational Resources</h3>
+                
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('understanding-pelvic-floor')">
+                        <h6><i class="fa fa-info-circle"></i> Understanding Pelvic Floor Muscles</h6>
+                        <small>Learn about anatomy and function</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('proper-technique')">
+                        <h6><i class="fa fa-video"></i> Proper Exercise Techniques</h6>
+                        <small>Video demonstrations and form tips</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('common-mistakes')">
+                        <h6><i class="fa fa-exclamation-triangle"></i> Common Mistakes to Avoid</h6>
+                        <small>Ensure you're exercising safely and effectively</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('recovery-timeline')">
+                        <h6><i class="fa fa-clock"></i> Postpartum Recovery Timeline</h6>
+                        <small>What to expect during your recovery journey</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function scheduleAssessment() {
+    const date = prompt('Enter preferred assessment date (YYYY-MM-DD):');
+    if (date) {
+        const time = prompt('Enter preferred time (HH:MM):');
+        if (time) {
+            alert(`Pelvic floor assessment scheduled for ${date} at ${time}. You will receive a confirmation shortly.`);
+        }
+    }
+}
+
+function startExercise(exerciseName) {
+    if (confirm(`Start ${exerciseName} exercise session?`)) {
+        alert(`Starting ${exerciseName} exercise session. Follow the guided instructions and maintain proper form.`);
+        
+        // In a real app, this would open a guided exercise interface
+        setTimeout(() => {
+            alert(`Great job! ${exerciseName} exercise completed. Keep up the consistent practice!`);
+        }, 3000);
+    }
+}
+
+function openResource(resourceName) {
+    alert(`Opening educational resource: ${resourceName}. In a real app, this would display detailed content or videos.`);
+}
+</script>
+
+{% endblock %}

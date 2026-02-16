@@ -1,0 +1,346 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .profile-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border-left: 4px solid #f093fb;
+    }
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .profile-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 24px;
+        color: white;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    .nutrition-item {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 4px solid #f093fb;
+    }
+    .week-indicator {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    .trimester-indicator {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    .milestone {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        margin: 5px 0;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Header -->
+    <div class="profile-header">
+        <h1><i class="fa fa-baby"></i> Pregnancy Profile</h1>
+        <p class="lead mb-0">Track your pregnancy journey week by week</p>
+    </div>
+
+    <div class="row">
+        <!-- Profile Info -->
+        <div class="col-md-6">
+            <div class="profile-card">
+                <h3><i class="fa fa-user"></i> Profile Information</h3>
+                
+                {% if profile %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Last Menstrual Period:</strong><br>
+                            {{ profile.last_menstrual_period }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Due Date:</strong><br>
+                            {{ profile.due_date }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Current Week:</strong><br>
+                            <span class="week-indicator">{{ profile.current_week }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Days Remaining:</strong><br>
+                            {{ profile.days_remaining }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Current Trimester:</strong><br>
+                            <span class="trimester-indicator">Trimester {{ profile.current_trimester }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Risk Level:</strong><br>
+                            {% if profile.is_high_risk %}
+                                <span style="color: #dc3545;">High Risk</span>
+                            {% else %}
+                                <span style="color: #28a745;">Normal</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="#" class="action-btn">
+                            <i class="fa fa-edit"></i> Edit Profile
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fa fa-baby fa-3x mb-3" style="color: #ccc;"></i>
+                        <h4>No Pregnancy Profile Yet</h4>
+                        <p class="text-muted">Create your pregnancy profile to start tracking your journey.</p>
+                        <a href="#" class="action-btn" data-toggle="modal" data-target="#createProfileModal">
+                            <i class="fa fa-plus"></i> Create Profile
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Nutritional Plans -->
+        <div class="col-md-6">
+            <div class="profile-card">
+                <h3><i class="fa fa-apple"></i> Nutritional Plans</h3>
+                
+                {% if nutritional_plans %}
+                    {% for plan in nutritional_plans %}
+                        <div class="mb-3 p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <h5>Week {{ plan.week }} - Trimester {{ plan.trimester }}</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Calories:</strong> {{ plan.calories_needed }} kcal
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Protein:</strong> {{ plan.protein_grams }}g
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Iron:</strong> {{ plan.iron_mg }}mg
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Calcium:</strong> {{ plan.calcium_mg }}mg
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Folic Acid:</strong> {{ plan.folic_acid_mcg }}μg
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Vitamin D:</strong> 600 IU
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <strong>Recommended Foods:</strong><br>
+                            {{ plan.foods_recommended|linebreaks }}
+                        </div>
+                        
+                        <div class="mt-3">
+                            <strong>Foods to Avoid:</strong><br>
+                            {{ plan.foods_to_avoid|linebreaks }}
+                        </div>
+                        
+                        <div class="mt-3">
+                            <strong>Supplements:</strong><br>
+                            {{ plan.supplements|linebreaks }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fa fa-apple fa-3x mb-3" style="color: #ccc;"></i>
+                        <h4>No Nutritional Plans Yet</h4>
+                        <p class="text-muted">Nutritional plans will appear here once you create a pregnancy profile.</p>
+                    </div>
+                {% endif %}
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="action-btn" data-toggle="modal" data-target="#generateNutritionModal">
+                            <i class="fa fa-plus"></i> Generate Nutrition Plan
+                        </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Profile Modal -->
+<div class="modal fade" id="createProfileModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Pregnancy Profile</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="pregnancyProfileForm">
+                    <div class="form-group">
+                        <label>Last Menstrual Period</label>
+                        <input type="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Trimester</label>
+                        <select class="form-control" required>
+                            <option value="">Select...</option>
+                            <option value="1">First Trimester</option>
+                            <option value="2">Second Trimester</option>
+                            <option value="3">Third Trimester</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>High Risk Pregnancy?</label>
+                        <select class="form-control" required>
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createPregnancyProfile()">Create Profile</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Generate Nutrition Modal -->
+<div class="modal fade" id="generateNutritionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Generate Nutrition Plan</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="nutritionPlanForm">
+                    <div class="form-group">
+                        <label>Pregnancy Week</label>
+                        <input type="number" class="form-control" min="1" max="42" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dietary Preferences</label>
+                        <select class="form-control" required>
+                            <option value="">Select...</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="non-vegetarian">Non-Vegetarian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Food Allergies</label>
+                        <input type="text" class="form-control" placeholder="e.g., nuts, dairy, gluten">
+                    </div>
+                    <div class="form-group">
+                        <label>Special Requirements</label>
+                        <textarea class="form-control" rows="3" placeholder="Any special dietary requirements..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="generateNutritionPlan()">Generate Plan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function createPregnancyProfile() {
+    alert('Pregnancy profile created successfully! You can now track your pregnancy journey.');
+    $('#createProfileModal').modal('hide');
+    document.getElementById('pregnancyProfileForm').reset();
+}
+
+function generateNutritionPlan() {
+    alert('Nutrition plan generated successfully! Your personalized nutrition recommendations are ready.');
+    $('#generateNutritionModal').modal('hide');
+    document.getElementById('nutritionPlanForm').reset();
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,335 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .edu-header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .edu-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .edu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .resource-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-left: 4px solid #4facfe;
+        transition: all 0.3s ease;
+    }
+    .resource-item:hover {
+        background: #e8f5e8;
+        transform: translateY(-2px);
+    }
+    .category-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        margin: 2px;
+        display: inline-block;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+    .video-thumbnail {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+    .course-progress {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 8px;
+        margin: 10px 0;
+    }
+    .progress-bar-fill {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        height: 100%;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="edu-header">
+        <h1><i class="fa fa-graduation-cap"></i> Educational Resources</h1>
+        <p class="lead mb-0">Comprehensive learning materials for your maternal health journey</p>
+    </div>
+
+    <div class="row">
+        <!-- Featured Courses -->
+        <div class="col-md-8">
+            <div class="edu-card">
+                <h3><i class="fa fa-book"></i> Featured Courses</h3>
+                
+                <div class="resource-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="video-thumbnail">
+                                <i class="fa fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5>Pregnancy 101: Complete Guide</h5>
+                            <p class="text-muted">Learn everything about pregnancy from conception to delivery</p>
+                            <div>
+                                <span class="category-badge">Pregnancy</span>
+                                <span class="category-badge">Beginner</span>
+                                <span class="category-badge">12 Lessons</span>
+                            </div>
+                            <div class="course-progress">
+                                <div class="progress-bar-fill" style="width: 35%"></div>
+                            </div>
+                            <small>35% Complete</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <button class="btn btn-primary btn-sm" onclick="startCourse('Pregnancy 101')">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resource-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="video-thumbnail">
+                                <i class="fa fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5>Nutrition for Mother & Baby</h5>
+                            <p class="text-muted">Essential nutrition guidelines during pregnancy and postpartum</p>
+                            <div>
+                                <span class="category-badge">Nutrition</span>
+                                <span class="category-badge">All Levels</span>
+                                <span class="category-badge">8 Lessons</span>
+                            </div>
+                            <div class="course-progress">
+                                <div class="progress-bar-fill" style="width: 60%"></div>
+                            </div>
+                            <small>60% Complete</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <button class="btn btn-primary btn-sm" onclick="startCourse('Nutrition Course')">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resource-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="video-thumbnail">
+                                <i class="fa fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5>Postpartum Care & Recovery</h5>
+                            <p class="text-muted">Complete guide to postpartum recovery and newborn care</p>
+                            <div>
+                                <span class="category-badge">Postpartum</span>
+                                <span class="category-badge">Intermediate</span>
+                                <span class="category-badge">10 Lessons</span>
+                            </div>
+                            <div class="course-progress">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <small>Not Started</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <button class="btn btn-success btn-sm" onclick="startCourse('Postpartum Care')">
+                                Start
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resource-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="video-thumbnail">
+                                <i class="fa fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5>Breastfeeding Masterclass</h5>
+                            <p class="text-muted">Everything you need to know about successful breastfeeding</p>
+                            <div>
+                                <span class="category-badge">Baby Care</span>
+                                <span class="category-badge">All Levels</span>
+                                <span class="category-badge">6 Lessons</span>
+                            </div>
+                            <div class="course-progress">
+                                <div class="progress-bar-fill" style="width: 80%"></div>
+                            </div>
+                            <small>80% Complete</small>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <button class="btn btn-primary btn-sm" onclick="startCourse('Breastfeeding')">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="action-btn" onclick="browseAllCourses()">
+                        <i class="fa fa-search"></i> Browse All Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Resources -->
+        <div class="col-md-4">
+            <div class="edu-card">
+                <h3><i class="fa fa-lightbulb"></i> Quick Resources</h3>
+                
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('pregnancy-timeline')">
+                        <h6><i class="fa fa-calendar"></i> Pregnancy Timeline</h6>
+                        <small>Week-by-week pregnancy guide</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('symptom-checker')">
+                        <h6><i class="fa fa-stethoscope"></i> Symptom Checker</h6>
+                        <small>Check common pregnancy symptoms</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('exercise-guide')">
+                        <h6><i class="fa fa-dumbbell"></i> Exercise Guide</h6>
+                        <small>Safe exercises during pregnancy</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="openResource('mental-health')">
+                        <h6><i class="fa fa-brain"></i> Mental Health</h6>
+                        <small>Emotional wellness resources</small>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="edu-card">
+                <h3><i class="fa fa-download"></i> Downloads</h3>
+                
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action" onclick="downloadResource('pregnancy-journal')">
+                        <h6><i class="fa fa-book"></i> Pregnancy Journal</h6>
+                        <small>Track your pregnancy journey</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="downloadResource('birth-plan')">
+                        <h6><i class="fa fa-file-alt"></i> Birth Plan Template</h6>
+                        <small>Create your personalized birth plan</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="downloadResource('checklist')">
+                        <h6><i class="fa fa-check-list"></i> Hospital Bag Checklist</h6>
+                        <small>Everything you need for delivery</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resource Categories -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="edu-card">
+                <h3><i class="fa fa-th-large"></i> Browse by Category</h3>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px; cursor: pointer;" onclick="browseCategory('pregnancy')">
+                            <i class="fa fa-baby fa-3x mb-3" style="color: #4facfe;"></i>
+                            <h5>Pregnancy</h5>
+                            <p>25 courses available</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px; cursor: pointer;" onclick="browseCategory('nutrition')">
+                            <i class="fa fa-apple-alt fa-3x mb-3" style="color: #4facfe;"></i>
+                            <h5>Nutrition</h5>
+                            <p>18 courses available</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px; cursor: pointer;" onclick="browseCategory('postpartum')">
+                            <i class="fa fa-heart fa-3x mb-3" style="color: #4facfe;"></i>
+                            <h5>Postpartum</h5>
+                            <p>15 courses available</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 10px; cursor: pointer;" onclick="browseCategory('baby-care')">
+                            <i class="fa fa-child fa-3x mb-3" style="color: #4facfe;"></i>
+                            <h5>Baby Care</h5>
+                            <p>22 courses available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function startCourse(courseName) {
+    if (confirm(`Start/Continue ${courseName}?`)) {
+        alert(`Loading ${courseName} course content... In a real app, this would open the course interface.`);
+    }
+}
+
+function openResource(resourceName) {
+    alert(`Opening ${resourceName}... In a real app, this would display the resource content.`);
+}
+
+function downloadResource(resourceName) {
+    alert(`Downloading ${resourceName}... In a real app, this would download the actual file.`);
+}
+
+function browseAllCourses() {
+    alert('Loading all available courses... In a real app, this would show a comprehensive course catalog.');
+}
+
+function browseCategory(category) {
+    alert(`Loading ${category} courses... In a real app, this would filter courses by category.`);
+}
+</script>
+
+{% endblock %}

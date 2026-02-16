@@ -1,0 +1,197 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .nutrition-header {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .nutrition-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .nutrition-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .nutrient-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .nutrient-item {
+        text-align: center;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    .nutrient-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 5px;
+    }
+    .nutrient-label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .food-section {
+        margin-top: 20px;
+    }
+    .food-item {
+        background: #e8f5e8;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 8px;
+        border-left: 4px solid #4facfe;
+    }
+    .food-section h5 {
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="nutrition-header">
+        <h1><i class="fa fa-apple"></i> Nutrition Engine</h1>
+        <p class="lead mb-0">Personalized nutrition based on your pregnancy week</p>
+    </div>
+
+    {% if nutritional_plan %}
+        <div class="row">
+            <!-- Current Week Info -->
+            <div class="col-md-4">
+                <div class="nutrition-card text-center">
+                    <h3>Current Week</h3>
+                    <div class="week-indicator">{{ current_week }}</div>
+                    <p class="mt-2">Week {{ current_week }} of your pregnancy</p>
+                </div>
+            </div>
+            
+            <!-- Nutrient Requirements -->
+            <div class="col-md-8">
+                <div class="nutrition-card">
+                    <h3><i class="fa fa-chart-pie"></i> Daily Nutrient Requirements</h3>
+                    <div class="nutrient-grid">
+                        <div class="nutrient-item">
+                            <div class="nutrient-value">{{ nutritional_plan.calories_needed }}</div>
+                            <div class="nutrient-label">Calories (kcal)</div>
+                        </div>
+                        <div class="nutrient-item">
+                            <div class="nutrient-value">{{ nutritional_plan.protein_grams }}</div>
+                            <div class="nutrient-label">Protein (g)</div>
+                        </div>
+                        <div class="nutrient-item">
+                            <div class="nutrient-value">{{ nutritional_plan.iron_mg }}</div>
+                            <div class="nutrient-label">Iron (mg)</div>
+                        </div>
+                        <div class="nutrient-item">
+                            <div class="nutrient-value">{{ nutritional_plan.calcium_mg }}</div>
+                            <div class="nutrient-label">Calcium (mg)</div>
+                        </div>
+                        <div class="nutrient-item">
+                            <div class="nutrient-value">{{ nutritional_plan.folic_acid_mcg }}</div>
+                            <div class="nutrient-label">Folic Acid (μg)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <!-- Food Recommendations -->
+            <div class="col-md-6">
+                <div class="nutrition-card">
+                    <h3><i class="fa fa-heart"></i> Recommended Foods</h3>
+                    <div class="food-section">
+                        <h5>Protein-Rich Foods</h5>
+                        <div class="food-item">Lean meats, fish, eggs, dairy, legumes, nuts</div>
+                        <div class="food-item">Greek yogurt, quinoa, hemp seeds</div>
+                    </div>
+                    
+                    <div class="food-section">
+                        <h5>Iron-Rich Foods</h5>
+                        <div class="food-item">Red meat, spinach, lentils, fortified cereals</div>
+                        <div class="food-item">Pumpkin seeds, dark chocolate, tofu</div>
+                    </div>
+                    
+                    <div class="food-section">
+                        <h5>Calcium-Rich Foods</h5>
+                        <div class="food-item">Dairy products, leafy greens, fortified foods</div>
+                        <div class="food-item">Almonds, sardines, sesame seeds</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Foods to Avoid -->
+            <div class="col-md-6">
+                <div class="nutrition-card">
+                    <h3><i class="fa fa-exclamation-triangle"></i> Foods to Avoid</h3>
+                    <div class="food-section">
+                        <h5>High Mercury Fish</h5>
+                        <div class="food-item">Shark, swordfish, king mackerel</div>
+                        <div class="food-item">Tilefish, bigeye tuna, marlin</div>
+                    </div>
+                    
+                    <div class="food-section">
+                        <h5>Raw or Undercooked Foods</h5>
+                        <div class="food-item">Raw sprouts, unpasteurized juices</div>
+                        <div class="food-item">Raw or undercooked eggs, meat, seafood</div>
+                    </div>
+                    
+                    <div class="food-section">
+                        <h5>Unpasteurized Dairy</h5>
+                        <div class="food-item">Soft cheeses, blue cheese</div>
+                        <div class="food-item">Unpasteurized milk or juice</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="#" class="action-btn" data-toggle="modal" data-target="#updateNutritionModal">
+                <i class="fa fa-sync"></i> Update Nutrition Plan
+            </a>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fa fa-apple fa-3x mb-3" style="color: #ccc;"></i>
+            <h4>No Nutrition Plan Available</h4>
+            <p class="text-muted">Create a pregnancy profile to get personalized nutrition recommendations.</p>
+            <a href="{% url 'pregnancy_profile' %}" class="action-btn">
+                <i class="fa fa-user"></i> Create Pregnancy Profile
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

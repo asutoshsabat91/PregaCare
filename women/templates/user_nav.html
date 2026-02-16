@@ -8,54 +8,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="shortcut icon" href="{% static 'images/herobg.png' %}" type="image/x-icon">
-    <title>SAFehER</title>
-
+    <title>PregaCare</title>
+    <style>
+        .navbar-brand {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateY(-2px);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        .made-by {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+    </style>
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-md bg-light navbar-light">
         <div class="container-fluid">
-            <a href="{% url 'home' %}" class="navbar-brand font-weight-bold" >SAFehER</a>
-            <button class="navbar-toggler" type="button" data-toggler="collapse" data-target="#collapsenavbar">
+            <a href="{% url 'home' %}" class="navbar-brand font-weight-bold" >PregaCare</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsenavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse text-center" id="collapsenavbar">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a href="{% url 'ngos' %}" class="nav-link ">NGOs</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-heartbeat"></i> Health Tracking
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="healthDropdown">
+                            <a class="dropdown-item" href="{% url 'menstrual_tracking' %}"><i class="fa fa-calendar"></i> Menstrual Tracking</a>
+                            <a class="dropdown-item" href="{% url 'pregnancy_profile' %}"><i class="fa fa-baby"></i> Pregnancy Profile</a>
+                            <a class="dropdown-item" href="{% url 'nutrition_engine' %}"><i class="fa fa-apple"></i> Nutrition Engine</a>
+                            <a class="dropdown-item" href="{% url 'postpartum_care' %}"><i class="fa fa-heart"></i> Postpartum Care</a>
+                            <a class="dropdown-item" href="{% url 'pelvic_floor_rehab' %}"><i class="fa fa-female"></i> Pelvic Floor Rehab</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="babyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-child"></i> Baby Care
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="babyDropdown">
+                            <a class="dropdown-item" href="{% url 'baby_care' %}"><i class="fa fa-syringe"></i> Vaccination Tracker</a>
+                            <a class="dropdown-item" href="{% url 'baby_care' %}"><i class="fa fa-line-chart"></i> Growth Records</a>
+                            <a class="dropdown-item" href="{% url 'baby_care' %}"><i class="fa fa-trophy"></i> Milestones</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="telehealthDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-video"></i> Telehealth
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="telehealthDropdown">
+                            <a class="dropdown-item" href="{% url 'telehealth' %}"><i class="fa fa-user-md"></i> Find Providers</a>
+                            <a class="dropdown-item" href="{% url 'telehealth' %}"><i class="fa fa-calendar-check"></i> My Appointments</a>
+                            <a class="dropdown-item" href="{% url 'telehealth' %}"><i class="fa fa-notes-medical"></i> Medical Records</a>
+                            <a class="dropdown-item" href="{% url 'telehealth' %}"><i class="fa fa-star"></i> Reviews</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="aiDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-robot"></i> AI Assistant
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="aiDropdown">
+                            <a class="dropdown-item" href="{% url 'ai_assistant' %}"><i class="fa fa-comments"></i> Chat with AI</a>
+                            <a class="dropdown-item" href="{% url 'ai_assistant' %}"><i class="fa fa-stethoscope"></i> Symptom Checker</a>
+                            <a class="dropdown-item" href="{% url 'ai_assistant' %}"><i class="fa fa-pills"></i> Medication Reminders</a>
+                            <a class="dropdown-item" href="{% url 'ai_assistant' %}"><i class="fa fa-lightbulb"></i> Health Insights</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="emergencyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-exclamation-triangle"></i> Emergency
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="emergencyDropdown">
+                            <a class="dropdown-item" href="{% url 'emergency_services' %}"><i class="fa fa-heartbeat"></i> MEWS Assessment</a>
+                            <a class="dropdown-item" href="{% url 'emergency_services' %}"><i class="fa fa-phone-alt"></i> SOS Alert</a>
+                            <a class="dropdown-item" href="{% url 'emergency_services' %}"><i class="fa fa-user-friends"></i> Emergency Contacts</a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'browse' %}" class="nav-link ">Browse</a>
+                        <a href="{% url 'bmi' %}" class="nav-link "><i class="fa fa-calculator"></i> BMI</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'bmi' %}" class="nav-link ">BMI Calculation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'menstrual' %}" class="nav-link ">Menstrual Track</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'magazine' %}" class="nav-link ">Magazines</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'vaccine' %}" class="nav-link ">Vaccines</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'logout' %}" class="nav-link ">Logout</a>
+                        <a href="{% url 'logout' %}" class="nav-link "><i class="fa fa-sign-out-alt"></i> Logout</a>
                     </li>
                 </ul>
                 <div class="btn-group">
                     <button type="button" class="btn btn-warning text-white" style="background: linear-gradient(to left bottom, rgba(5, 213, 217, 0.767), rgba(101, 23, 203, 0.7), rgba(203, 33, 141, 0.7));" data-toggle="dropdown">Welcome {{request.user.first_name}}</button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'profile' %}">PROFILE</a>
-                        <a class="dropdown-item" href="#">EDIT PROFILE</a>
-                        <a class="dropdown-item" href="#">CHNGE PASSWORD</a>
+                        <a class="dropdown-item" href="{% url 'profile' %}"><i class="fa fa-user"></i> PROFILE</a>
+                        <a class="dropdown-item" href="{% url 'edit_profile' %}"><i class="fa fa-edit"></i> EDIT PROFILE</a>
+                        <a class="dropdown-item" href="{% url 'changepassword' %}"><i class="fa fa-key"></i> CHANGE PASSWORD</a>
                     </div>
                 </div>
             </div>
@@ -63,18 +151,17 @@
         </div>
     </nav>
 
-
     {% block body %}
     {% endblock %}
 
-
-
-
+<div class="made-by">
+    Made By Asutosh
+</div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
-<script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
-<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
 

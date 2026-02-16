@@ -1,0 +1,176 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .bmi-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .bmi-calculator {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .form-group {
+        margin-bottom: 25px;
+    }
+    .form-label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    .calculate-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 1.1rem;
+    }
+    .calculate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .result-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 30px;
+        text-align: center;
+        display: none;
+    }
+    .bmi-value {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .bmi-category {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+    .bmi-message {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- BMI Calculator Header -->
+    <div class="bmi-header">
+        <h1><i class="fa fa-calculator"></i> BMI Calculator</h1>
+        <p class="lead mb-0">Track your Body Mass Index during pregnancy</p>
+    </div>
+
+    <!-- BMI Calculator Form -->
+    <div class="bmi-calculator">
+        <form method="POST" id="bmiForm">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Height (cm)</label>
+                        <input type="number" class="form-control" name="height" id="height" placeholder="Enter your height" required min="100" max="250">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Weight (kg)</label>
+                        <input type="number" class="form-control" name="weight" id="weight" placeholder="Enter your weight" required min="30" max="200" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="calculate-btn">
+                    <i class="fa fa-calculator"></i> Calculate BMI
+                </button>
+            </div>
+        </form>
+
+        <!-- BMI Result -->
+        <div class="result-card" id="bmiResult">
+            <div class="bmi-value" id="bmiValue">--</div>
+            <div class="bmi-category" id="bmiCategory">Calculating...</div>
+            <div class="bmi-message" id="bmiMessage">Enter your measurements above</div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('bmiForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    
+    if (height && weight) {
+        // Calculate BMI: weight (kg) / (height (m))^2
+        const heightInMeters = height / 100;
+        const bmi = weight / (heightInMeters * heightInMeters);
+        
+        // Show result
+        const resultDiv = document.getElementById('bmiResult');
+        const bmiValueDiv = document.getElementById('bmiValue');
+        const bmiCategoryDiv = document.getElementById('bmiCategory');
+        const bmiMessageDiv = document.getElementById('bmiMessage');
+        
+        bmiValueDiv.textContent = bmi.toFixed(1);
+        
+        let category, message, color;
+        
+        if (bmi < 18.5) {
+            category = 'Underweight';
+            message = 'Consider consulting your healthcare provider about healthy weight gain during pregnancy';
+            color = '#ffc107';
+        } else if (bmi >= 18.5 && bmi < 25) {
+            category = 'Normal Weight';
+            message = 'Great! Maintain a healthy diet and regular exercise';
+            color = '#28a745';
+        } else if (bmi >= 25 && bmi < 30) {
+            category = 'Overweight';
+            message = 'Focus on nutritious foods and gentle exercise. Consult your provider for guidance';
+            color = '#fd7e14';
+        } else {
+            category = 'Obese';
+            message = 'Important to consult your healthcare provider for a personalized health plan';
+            color = '#dc3545';
+        }
+        
+        bmiCategoryDiv.textContent = category;
+        bmiMessageDiv.textContent = message;
+        resultDiv.style.background = color;
+        resultDiv.style.display = 'block';
+        
+        // Smooth scroll to result
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,301 @@
+{% extends 'user_nav.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .ai-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+    .ai-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .ai-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .chat-container {
+        height: 400px;
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        overflow-y: auto;
+        padding: 20px;
+        background: #f8f9fa;
+        margin-bottom: 20px;
+    }
+    .message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 80%;
+    }
+    .user-message {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        margin-left: auto;
+        text-align: right;
+    }
+    .ai-message {
+        background: white;
+        border: 1px solid #e9ecef;
+        margin-right: auto;
+    }
+    .input-group {
+        border-radius: 25px;
+        overflow: hidden;
+    }
+    .chat-input {
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+    .send-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .send-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .quick-action {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 15px;
+        padding: 10px 15px;
+        margin: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    .quick-action:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-2px);
+    }
+    .conversation-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid #667eea;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="ai-header">
+        <h1><i class="fa fa-robot"></i> AI Health Assistant</h1>
+        <p class="lead mb-0">24/7 AI-powered health guidance and support</p>
+    </div>
+
+    <div class="row">
+        <!-- Chat Interface -->
+        <div class="col-md-8">
+            <div class="ai-card">
+                <h3><i class="fa fa-comments"></i> Health Chat</h3>
+                
+                <div class="chat-container" id="chatContainer">
+                    <div class="message ai-message">
+                        <strong>AI Assistant:</strong> Hello! I'm your PregaCare AI Health Assistant. I'm here to help you with questions about pregnancy, postpartum care, baby health, nutrition, and more. How can I assist you today?
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="mb-3">
+                    <h5>Quick Questions:</h5>
+                    <div class="quick-action" onclick="sendQuickMessage('What are the early signs of pregnancy?')">
+                        🤰 Early pregnancy signs
+                    </div>
+                    <div class="quick-action" onclick="sendQuickMessage('What foods should I avoid during pregnancy?')">
+                        🍎 Foods to avoid
+                    </div>
+                    <div class="quick-action" onclick="sendQuickMessage('How can I relieve morning sickness?')">
+                        😷 Morning sickness relief
+                    </div>
+                    <div class="quick-action" onclick="sendQuickMessage('When should I call my doctor?')">
+                        📞 When to call doctor
+                    </div>
+                    <div class="quick-action" onclick="sendQuickMessage('What exercises are safe during pregnancy?')">
+                        🏃 Safe exercises
+                    </div>
+                    <div class="quick-action" onclick="sendQuickMessage('How do I know if my baby is getting enough milk?')">
+                        🍼 Baby feeding signs
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="input-group">
+                    <input type="text" class="form-control chat-input" id="chatInput" placeholder="Type your health question here..." onkeypress="handleKeyPress(event)">
+                    <div class="input-group-append">
+                        <button class="send-btn" onclick="sendMessage()">
+                            <i class="fa fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conversation History -->
+        <div class="col-md-4">
+            <div class="ai-card">
+                <h3><i class="fa fa-history"></i> Recent Conversations</h3>
+                
+                <div class="conversation-item">
+                    <h6>Pregnancy Nutrition</h6>
+                    <small class="text-muted">2 hours ago</small>
+                    <p class="mb-0">Asked about iron-rich foods and supplements...</p>
+                </div>
+                
+                <div class="conversation-item">
+                    <h6>Baby Sleep Patterns</h6>
+                    <small class="text-muted">Yesterday</small>
+                    <p class="mb-0">Discussed newborn sleep schedules and tips...</p>
+                </div>
+                
+                <div class="conversation-item">
+                    <h6>Postpartum Exercise</h6>
+                    <small class="text-muted">2 days ago</small>
+                    <p class="mb-0">Safe exercises after C-section recovery...</p>
+                </div>
+                
+                <div class="conversation-item">
+                    <h6>Breastfeeding Support</h6>
+                    <small class="text-muted">3 days ago</small>
+                    <p class="mb-0">Latching techniques and common issues...</p>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-primary btn-sm" onclick="clearHistory()">
+                        <i class="fa fa-trash"></i> Clear History
+                    </button>
+                </div>
+            </div>
+            
+            <!-- AI Features -->
+            <div class="ai-card">
+                <h3><i class="fa fa-star"></i> AI Features</h3>
+                
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <h6><i class="fa fa-clock"></i> 24/7 Availability</h6>
+                        <small>Get instant answers anytime, anywhere</small>
+                    </div>
+                    <div class="list-group-item">
+                        <h6><i class="fa fa-shield-alt"></i> Privacy Protected</h6>
+                        <small>Your health data is secure and confidential</small>
+                    </div>
+                    <div class="list-group-item">
+                        <h6><i class="fa fa-brain"></i> Medical Knowledge</h6>
+                        <small>Based on latest medical guidelines and research</small>
+                    </div>
+                    <div class="list-group-item">
+                        <h6><i class="fa fa-language"></i> Multi-language</h6>
+                        <small>Support for multiple languages coming soon</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    
+    if (message) {
+        addUserMessage(message);
+        input.value = '';
+        
+        // Simulate AI response
+        setTimeout(() => {
+            generateAIResponse(message);
+        }, 1000);
+    }
+}
+
+function sendQuickMessage(message) {
+    addUserMessage(message);
+    
+    // Simulate AI response
+    setTimeout(() => {
+        generateAIResponse(message);
+    }, 1000);
+}
+
+function addUserMessage(message) {
+    const chatContainer = document.getElementById('chatContainer');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message user-message';
+    messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function generateAIResponse(userMessage) {
+    const responses = {
+        'pregnancy': 'Early pregnancy signs include missed periods, nausea, breast tenderness, fatigue, and frequent urination. A home pregnancy test can confirm pregnancy around the time of your missed period.',
+        'foods': 'During pregnancy, avoid raw fish, unpasteurized dairy, deli meats, raw sprouts, and high-mercury fish. Cook meats thoroughly and wash all fruits and vegetables.',
+        'morning sickness': 'Try eating small, frequent meals, ginger tea, vitamin B6 supplements, and avoiding strong smells. Severe morning sickness may require medical attention.',
+        'doctor': 'Contact your doctor immediately if you experience severe bleeding, severe abdominal pain, high fever, decreased fetal movement, or any other concerning symptoms.',
+        'exercises': 'Safe exercises include walking, swimming, prenatal yoga, and stationary cycling. Avoid high-impact activities and consult your doctor before starting any exercise routine.',
+        'feeding': 'Signs of adequate feeding include 6+ wet diapers daily, regular bowel movements, steady weight gain, and contentment after feeding. Consult a lactation specialist if concerned.'
+    };
+    
+    let response = 'I understand your question. Based on current medical guidelines, ';
+    
+    for (let key in responses) {
+        if (userMessage.toLowerCase().includes(key)) {
+            response += responses[key];
+            break;
+        }
+    }
+    
+    if (response === 'I understand your question. Based on current medical guidelines, ') {
+        response += 'I recommend consulting with your healthcare provider for personalized medical advice. Is there anything specific about your health concern that I can help clarify?';
+    }
+    
+    const chatContainer = document.getElementById('chatContainer');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message ai-message';
+    messageDiv.innerHTML = `<strong>AI Assistant:</strong> ${response}`;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function clearHistory() {
+    if (confirm('Are you sure you want to clear your conversation history?')) {
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.innerHTML = `
+            <div class="message ai-message">
+                <strong>AI Assistant:</strong> Hello! I'm your PregaCare AI Health Assistant. I'm here to help you with questions about pregnancy, postpartum care, baby health, nutrition, and more. How can I assist you today?
+            </div>
+        `;
+        alert('Conversation history cleared successfully.');
+    }
+}
+</script>
+
+{% endblock %}

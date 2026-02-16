@@ -3,73 +3,191 @@
 {% load static %}
 {% block body %}
 
-{% ifequal error "no" %}
-<script>
-    alert('Logged In Successfully');
-    window.location=("{% url 'profile' %}");
-</script>
-{% endifequal %}
-
-{% ifequal error "yes" %}
-<script>
-    alert('Invalid Login Credentials, Try again');
-</script>
-{% endifequal %}
-
 <style>
-  .doabout{
-      margin-top:30px;
-      padding-top: 10px;
-  }
+    .login-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+    }
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+    }
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .login-header h1 {
+        color: #667eea;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .login-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+    .form-group {
+        margin-bottom: 25px;
+        text-align: left;
+    }
+    .form-label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 1rem;
+        display: block;
+    }
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+    .login-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    .signup-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: bold;
+        margin-top: 20px;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    .signup-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    .divider {
+        color: #ddd;
+        margin: 20px 0;
+        text-align: center;
+    }
+    .divider span {
+        background: white;
+        padding: 0 10px;
+    }
+    .made-by {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 12px;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
 </style>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-sm-6">
-            <h2 class="doabout text-center"><b>NEW USER</b></h2>
-            <hr>
-            <p class="text-center"><b>Create new Account,REGISTER</b>
-                <hr><hr><br>
-            <a href="{% url 'signup' %}"><button type="button" class="bb btn btn-primary text-center">CREATE NEW ACCOUNT</button></a><br><hr><hr>
-            </p>
+<div class="login-container">
+    <div class="login-card">
+        <!-- Header -->
+        <div class="login-header">
+            <h1><i class="fa fa-heartbeat"></i> Welcome to PregaCare</h1>
+            <p>Your complete maternal health companion</p>
         </div>
-        <div class="col-sm-6">
-            <h2 class="doabout text-center"></i><b>LOGIN</b></h2>
-            <hr>
-            <p class="text-center"><b>Already have account,LOGIN</b>
-                <hr><hr><br>
-            <button type="button" class="bb btn btn-primary text-center">LOGIN</button><br><hr><hr>
-            </p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="email">Email address:</label>
-                  <input type="email" class="form-control" placeholder="Enter email" name="email">
-                </div>
-                <div class="form-group">
-                  <label for="pwd">Password:</label>
-                  <input type="password" class="form-control" placeholder="Enter password" name="pwd" id="logpassword">
-                </div>
-                <div class="form-group form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" onclick="showPassword()"> Show Password
-                  </label>
-                </div>
-                <button type="submit" class="bb btn btn-primary">Submit</button>
-              </form>
 
+        {% ifequal error "no" %}
+            <script>
+                alert('Logged In Successfully');
+                window.location.href = "{% url 'dashboard' %}";
+            </script>
+        {% endifequal %}
+
+        {% ifequal error "yes" %}
+            <script>
+                alert('Invalid Login Credentials, Try again');
+            </script>
+        {% endifequal %}
+
+        <!-- Login Form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="email">
+                    <i class="fa fa-envelope"></i> Email Address
+                </label>
+                <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="pwd">
+                    <i class="fa fa-lock"></i> Password
+                </label>
+                <input type="password" class="form-control" name="pwd" id="logpassword" placeholder="Enter your password" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <input type="checkbox" onclick="showPassword()"> Show Password
+                </label>
+            </div>
+            
+            <button type="submit" class="login-btn">
+                <i class="fa fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="text-center">
+            <a href="{% url 'signup' %}" class="signup-link">
+                <i class="fa fa-user-plus"></i> Create New Account
+            </a>
         </div>
     </div>
 </div>
+
+<div class="made-by">
+    Made By Asutosh
+</div>
+
 <script>
     function showPassword() {
-            var x = document.getElementById("logpassword");
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-                x.type = "password";
-            }
+        var x = document.getElementById("logpassword");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
         }
+    }
 </script>
 
 {% endblock %}
