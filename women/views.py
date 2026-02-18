@@ -397,6 +397,28 @@ def postpartum_care(request):
             })()
         ]
         
+        # Add sample growth records
+        sample_growth = [
+            {'weight': 3.5, 'height': 52, 'head_circumference': 36, 'baby_name': 'Sample Baby', 'record_date': '2024-01-15'},
+            {'weight': 4.2, 'height': 55, 'head_circumference': 37, 'baby_name': 'Sample Baby', 'record_date': '2024-02-15'},
+        ]
+        
+        # Add sample milestones
+        sample_milestones = [
+            {
+                'baby_name': 'Sample Baby',
+                'category': 'Motor Skills',
+                'description': 'Started rolling over from back to tummy',
+                'achievement_date': '2024-01-20'
+            },
+            {
+                'baby_name': 'Sample Baby',
+                'category': 'Social Development',
+                'description': 'Started recognizing familiar faces',
+                'achievement_date': '2024-02-10'
+            }
+        ]
+        
         postpartum_stats = {
             'days_postpartum': 30,
             'weeks_postpartum': 4,
@@ -477,6 +499,34 @@ def baby_care(request):
                 return redirect('baby_care')
             except Exception as e:
                 messages.error(request, f'Error adding growth record: {str(e)}')
+        
+        # Handle milestone creation
+        elif 'milestone_category' in request.POST:
+            try:
+                baby_name = request.POST.get('baby_name', 'Baby')
+                baby, created = BabyProfile.objects.get_or_create(
+                    user=request.user,
+                    defaults={
+                        'name': baby_name,
+                        'birth_date': datetime.now().date() - timedelta(days=30),
+                        'birth_weight': 3.2,
+                        'birth_length': 50,
+                        'apgar_score': 9
+                    }
+                )
+                
+                # Create milestone record (using existing model or create simple structure)
+                milestone_data = {
+                    'baby': baby,
+                    'category': request.POST.get('milestone_category'),
+                    'description': request.POST.get('milestone_description'),
+                    'achievement_date': datetime.strptime(request.POST.get('achievement_date'), '%Y-%m-%d').date(),
+                    'notes': request.POST.get('notes', '')
+                }
+                messages.success(request, 'Developmental milestone added successfully!')
+                return redirect('baby_care')
+            except Exception as e:
+                messages.error(request, f'Error adding milestone: {str(e)}')
     
     # GET request - display existing data
     try:
@@ -521,6 +571,7 @@ def baby_care(request):
         'baby_profiles': baby_profiles,
         'vaccination_records': vaccination_records,
         'growth_records': growth_records,
+        'milestones': sample_milestones,
         'title': 'Baby Care - PregaCare'
     }
     return render(request, 'baby_care.html', context)
