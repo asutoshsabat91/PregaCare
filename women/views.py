@@ -324,7 +324,7 @@ def postpartum_care(request):
                 profile = PostpartumProfile.objects.create(
                     user=request.user,
                     delivery_date=delivery_date,
-                    recovery_notes=request.POST.get('recovery_notes', '')
+                    delivery_type=delivery_type
                 )
                 
                 # Create baby profile linked to postpartum
@@ -441,6 +441,23 @@ def postpartum_care(request):
 @login_required
 def baby_care(request):
     """Baby care page"""
+    
+    # Initialize sample data outside try block
+    sample_milestones = [
+        {
+            'baby_name': 'Sample Baby',
+            'category': 'Motor Skills',
+            'description': 'Started rolling over from back to tummy',
+            'achievement_date': '2024-01-20'
+        },
+        {
+            'baby_name': 'Sample Baby',
+            'category': 'Social Development',
+            'description': 'Started recognizing familiar faces',
+            'achievement_date': '2024-02-10'
+        }
+    ]
+    
     if request.method == 'POST':
         # Handle vaccination record creation
         if 'vaccine_name' in request.POST:
