@@ -165,6 +165,7 @@ def nutrition_engine(request):
             try:
                 from datetime import datetime
                 week = int(request.POST.get('pregnancy_week'))
+                print(f"DEBUG: Received week: {week}")  # Debug line
                 
                 # Get or create pregnancy profile
                 profile, created = PregnancyProfile.objects.get_or_create(
@@ -176,6 +177,7 @@ def nutrition_engine(request):
                         'is_high_risk': False
                     }
                 )
+                print(f"DEBUG: Profile created: {created}")  # Debug line
                 
                 # Calculate nutritional needs based on pregnancy week
                 calories_needed = 2000 + (week * 50)
@@ -195,9 +197,11 @@ def nutrition_engine(request):
                     calcium_mg=calcium_mg,
                     folic_acid_mcg=folic_acid_mcg
                 )
+                print(f"DEBUG: Plan created with ID: {plan.id}")  # Debug line
                 messages.success(request, 'Nutrition plan generated successfully!')
                 return redirect('nutrition_engine')
             except Exception as e:
+                print(f"DEBUG: Error occurred: {str(e)}")  # Debug line
                 messages.error(request, f'Error generating nutrition plan: {str(e)}')
     
     # GET request - display existing data or sample data
@@ -207,6 +211,7 @@ def nutrition_engine(request):
         nutritional_plan = NutritionalPlan.objects.filter(
             pregnancy_profile=profile
         ).order_by('-week').first()
+        print(f"DEBUG: Found profile, current_week: {current_week}")  # Debug line
     except PregnancyProfile.DoesNotExist:
         # Create sample data for demonstration
         current_week = 20
@@ -219,6 +224,7 @@ def nutrition_engine(request):
             'calcium_mg': 1200,
             'folic_acid_mcg': 500
         })()
+        print(f"DEBUG: No profile found, using sample data")  # Debug line
     
     # Generate food recommendations based on week
     food_recommendations = generate_food_recommendations(current_week)
